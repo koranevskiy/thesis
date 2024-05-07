@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  minio:
+    image: minio/minio:latest
+    command: server --console-address ":9001" /data/
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - .env.local
+    restart: on-failure
+    volumes:
+      - ./minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3

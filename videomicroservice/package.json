@@ -1,0 +1,24 @@
+{
+  "name": "videomicroservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:local": "NODE_ENV=local node index.mjs"
+  },
+  "imports": {
+    "#utils/*": "./utils/*",
+    "#config/*": "./config/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1613.0",
+    "cron": "^3.1.7",
+    "dotenv": "^16.4.5",
+    "moment": "^2.30.1"
+  }
+}
