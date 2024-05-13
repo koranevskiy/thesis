@@ -25,7 +25,7 @@ async function loadVideosToS3() {
     dirFilesPath.forEach(file => fs.unlinkSync(file.path))
   }
 
-  await new Promise((res) => setTimeout(res, 500))
+   await new Promise((res) => setTimeout(res, 100))
 
   let prevFile = null
   const filePair = []

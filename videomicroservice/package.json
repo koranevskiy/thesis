@@ -10,7 +10,8 @@
   },
   "imports": {
     "#utils/*": "./utils/*",
-    "#config/*": "./config/*"
+    "#config/*": "./config/*",
+    "#services/*": "./services/*"
   },
   "keywords": [],
   "author": "",
