@@ -2,12 +2,12 @@ import child_process from "node:child_process";
 
 class SpawnProcessBuilder{
   constructor(childProcess) {
-    this._childProcess = childProcess
+    this._processName = childProcess
     this.args = []
   }
 
-  get process() {
-    return this._childProcess
+  get processName() {
+    return this._processName
   }
 
   add(...args){
@@ -22,21 +22,9 @@ class SpawnProcessBuilder{
   }
 
   run() {
-    this.child = child_process.spawn(this.process, this.args)
-
+    this.process = child_process.spawn(this.processName, this.args)
     return this
   }
-
-  on(event, cb){
-    this.child.stdout.on(event, cb)
-    return this
-  }
-
-  onError(event, cb) {
-    this.child.stderr.on(event, cb)
-    return this
-  }
-
 }
 
 export {

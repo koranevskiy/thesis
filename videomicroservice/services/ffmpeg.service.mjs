@@ -40,7 +40,7 @@ class FfmpegService {
     if (logs) {
       const logsPath = path.resolve(process.cwd(), 'logs', 'ffmpeg-logs.txt')
       // ffmpeg пишет все логи по умолчанию в stderr
-      this.ffmpeg.child.stderr.pipe(fs.createWriteStream(logsPath, {encoding: 'utf8'}))
+      this.ffmpeg.process.stderr.pipe(fs.createWriteStream(logsPath, {encoding: 'utf8'}))
     }
   }
 
@@ -48,7 +48,7 @@ class FfmpegService {
    * Убить процесс ffmpeg
    */
   kill() {
-    this.ffmpeg.child.kill()
+    this.ffmpeg.process.kill()
   }
 }
 
