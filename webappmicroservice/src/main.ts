@@ -5,6 +5,7 @@ import { AppConfig } from '#config/app.config'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { GlobalExceptionFilter } from '#system/filters/global-exception.filter'
 import { CustomLogger } from '#system/logger/logger'
+import { ValidationGlobalPipe } from '#system/pipes/validation-global.pipe'
 
 
 async function bootstrap() {
@@ -29,6 +30,7 @@ async function bootstrap() {
   const loggerService = new CustomLogger(configService)
   app.useLogger(loggerService)
   app.useGlobalFilters(new GlobalExceptionFilter(loggerService))
+  app.useGlobalPipes(new ValidationGlobalPipe())
 
   await app.listen(appCfg.apiPort);
 }

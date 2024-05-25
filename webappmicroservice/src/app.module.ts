@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from 'src/app.controller'
 import { LoggerModule } from '#system/logger/logger.module'
 import { CustomLogger } from '#system/logger/logger'
+import { AuthJwtModule } from '#system/auth/auth-jwt.module'
+import { AuthModule } from 'src/domain/auth/auth.module'
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -22,7 +24,9 @@ import { CustomLogger } from '#system/logger/logger'
     },
     inject: [ConfigService]
   }),
-    LoggerModule
+    LoggerModule,
+    AuthJwtModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [CustomLogger]

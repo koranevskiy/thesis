@@ -7,6 +7,8 @@ export interface AppConfig {
   elasticNode: string
   elasticIndex: string
   logLevel: string
+  accessTokenExpireTime: string
+  jwtSecretKey: string
 }
 
 export const appConfig = registerAs('app', () => ({
@@ -14,5 +16,7 @@ export const appConfig = registerAs('app', () => ({
   loggerTransport: 'console',
   elasticNode: process.env.ELASTIC_NODE,
   elasticIndex: process.env.ELASTIC_INDEX,
-  logLevel: process.env.LOG_LEVEL
+  logLevel: process.env.LOG_LEVEL,
+  accessTokenExpireTime: process.env.ACCESS_TOKEN_EXPIRE_TIME,
+  jwtSecretKey: process.env.JWT_SECRET_KEY
 }))

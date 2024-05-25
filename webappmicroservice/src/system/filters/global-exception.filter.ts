@@ -2,6 +2,7 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, LoggerService } from
 import { DomainException } from '#system/exceptions/domain.exception'
 import { Request, Response } from 'express'
 import { DatabaseError } from 'pg-protocol'
+import { ValidationException } from '#system/exceptions/validation.exception'
 @Catch()
 class GlobalExceptionFilter implements ExceptionFilter {
 
@@ -28,6 +29,10 @@ class GlobalExceptionFilter implements ExceptionFilter {
         path,
         timestamp
       })
+    }
+
+    if(exception instanceof ValidationException){
+      return response.status(HttpStatus.BAD_REQUEST).json(exception.errors)
     }
 
     this.logger.error(exception)
