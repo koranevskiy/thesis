@@ -2,3 +2,5 @@
 .DB_Store
 minio
 webPgData
+elasticData
+certs

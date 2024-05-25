@@ -1,8 +1,11 @@
-import { Module } from '@nestjs/common'
+import {  Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { DatabaseConfig, databaseConfig } from '#config/database.config'
 import { appConfig } from '#config/app.config'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { AppController } from 'src/app.controller'
+import { LoggerModule } from '#system/logger/logger.module'
+import { CustomLogger } from '#system/logger/logger'
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -18,9 +21,11 @@ import { TypeOrmModule } from '@nestjs/typeorm'
       return dbCfg
     },
     inject: [ConfigService]
-  })],
-  controllers: [],
-  providers: [],
+  }),
+    LoggerModule
+  ],
+  controllers: [AppController],
+  providers: [CustomLogger]
 })
 export class AppModule {
 }
