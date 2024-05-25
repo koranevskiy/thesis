@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { DatabaseConfig, databaseConfig } from '#config/database.config'
 import { appConfig } from '#config/app.config'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { AppController } from 'src/app.controller'
 import { LoggerModule } from '#system/logger/logger.module'
 import { CustomLogger } from '#system/logger/logger'
 import { AuthJwtModule } from '#system/auth/auth-jwt.module'
@@ -19,8 +18,12 @@ import { AuthModule } from 'src/domain/auth/auth.module'
   TypeOrmModule.forRootAsync({
     imports: [ConfigModule],
     useFactory: (configService: ConfigService) => {
-      const dbCfg = configService.get<DatabaseConfig>('database')
-      return dbCfg
+      const dbConfig =  configService.get<DatabaseConfig>('database')
+      return {
+        ...dbConfig,
+        migrations: ["dist/migrations/*.{js,ts}"],
+        entities: ['dist/**/*.entity.{js,ts}']
+      }
     },
     inject: [ConfigService]
   }),
@@ -28,7 +31,6 @@ import { AuthModule } from 'src/domain/auth/auth.module'
     AuthJwtModule,
     AuthModule
   ],
-  controllers: [AppController],
   providers: [CustomLogger]
 })
 export class AppModule {

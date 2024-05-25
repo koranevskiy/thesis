@@ -14,7 +14,7 @@ const dbCfg: DatabaseConfig = {
   database: process.env.DATABASE_NAME,
   migrations: ['dist/migrations/*{.ts,.js}'],
   synchronize: false,
-  entities: ['**/*.entity.{ts,js}'],
+  entities: ['dist/**/*.entity.{ts,js}'],
 }
 
 const dataSource = new DataSource(dbCfg)

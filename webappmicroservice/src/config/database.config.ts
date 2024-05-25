@@ -1,6 +1,5 @@
 import { registerAs } from '@nestjs/config'
 
-
 export interface DatabaseConfig{
   type: 'postgres'
   host: string
@@ -20,7 +19,5 @@ export const databaseConfig = registerAs('database', () => ({
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  migrations: ["dist/migrations/*{.ts,.js}"],
   synchronize: false,
-  entities: ['**/*.entity.{ts,js}'],
 }))

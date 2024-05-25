@@ -2,7 +2,7 @@ import { BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 import { ApiProperty } from '@nestjs/swagger'
 
 
-export class BaseEntityModel extends BaseEntity {
+export abstract class BaseEntityModel extends BaseEntity {
 
   @ApiProperty()
   @CreateDateColumn({type: 'timestamp with time zone', default: () => "CURRENT_TIMESTAMP"})
