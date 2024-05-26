@@ -38,6 +38,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationGlobalPipe())
   app.useGlobalInterceptors(new ResponseInterceptor(new Reflector()))
 
+  app.enableCors({ allowedHeaders: '*', exposedHeaders: '*' });
   await app.listen(appCfg.apiPort);
 }
 bootstrap();
