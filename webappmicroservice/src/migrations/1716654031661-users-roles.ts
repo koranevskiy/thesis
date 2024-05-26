@@ -9,6 +9,8 @@ export class UsersRoles1716654031661 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "users" ("created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "update_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "user_id" SERIAL NOT NULL, "password" character varying NOT NULL, "first_name" character varying NOT NULL, "middle_name" character varying, "email" character varying NOT NULL, CONSTRAINT "PK_96aac72f1574b88752e9fb00089" PRIMARY KEY ("user_id"))`);
         await queryRunner.query(`ALTER TABLE "users_roles" ADD CONSTRAINT "FK_c0d99e820504d74dadf726beefe" FOREIGN KEY ("userUserId") REFERENCES "users"("user_id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "users_roles" ADD CONSTRAINT "FK_21affdaf3405de1fa0ebdc78551" FOREIGN KEY ("roleRoleId") REFERENCES "roles"("role_id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`INSERT into roles (role_name) values('user')`);
+        await queryRunner.query(`INSERT into roles (role_name) values('admin')`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
