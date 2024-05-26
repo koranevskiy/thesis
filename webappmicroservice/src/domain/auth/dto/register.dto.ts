@@ -34,7 +34,9 @@ export class RegisterDto {
   @IsNotEmpty()
   password: string
 
-  @ApiProperty()
+  @ApiProperty({
+    enum: DefaultRolesEnum
+  })
   @IsEnum(DefaultRolesEnum)
   @IsNotEmpty()
   role: DefaultRolesEnum

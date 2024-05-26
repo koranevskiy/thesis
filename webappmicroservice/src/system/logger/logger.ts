@@ -29,10 +29,10 @@ export class CustomLogger implements LoggerService {
       })
     } else {
       const customFormat = format.printf(
-        ({ timestamp, level, stack, message, context }) => {
+        ({ timestamp, level, stack, message, context, type, name }) => {
           return (
             `${timestamp} - [${level.toUpperCase()}] - ${stack || message} ` +
-            (context ? `- CONTEXT: ${context}` : '')
+            (context ? `- CONTEXT: ${context}` : '') + `${type ?? ''} ${name ?? ''}`
           );
         })
 
