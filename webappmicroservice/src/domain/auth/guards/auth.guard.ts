@@ -1,6 +1,7 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
+import { CanActivate, ExecutionContext, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import { AuthJwtService } from '#system/auth/auth-jwt.service'
 import { Request } from 'express'
+import { DomainException } from '#system/exceptions/domain.exception'
 
 
 @Injectable()
@@ -11,13 +12,13 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest()
     const token = this.extractToken(request)
     if (!token) {
-      throw new UnauthorizedException()
+      throw new DomainException({code: HttpStatus.UNAUTHORIZED, message: 'Не авторизован'})
     }
     try {
       const payload = await this.jwtService.verify({token: token})
-      request['user_id'] = payload.user_id
+      request.headers['user_id'] = payload.user_id
     } catch {
-      throw new UnauthorizedException()
+      throw new DomainException({code: HttpStatus.UNAUTHORIZED, message: 'Не авторизован'})
     }
     return true
   }

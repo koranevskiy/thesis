@@ -13,7 +13,9 @@ export class ValidationGlobalPipe implements PipeTransform {
     if (metadata.type === 'query' && typeof value !== 'object') {
       return value
     }
-
+    if(metadata.type === 'custom') {
+      return value
+    }
     const instance = plainToInstance(metadata.metatype, value)
     const errors = await validate(instance, {
       whitelist: true,

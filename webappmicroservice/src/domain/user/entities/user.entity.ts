@@ -13,9 +13,16 @@ export class User extends BaseEntityModel{
   @Column({select: false})
   password: string
 
+  @Column({select: false})
+  salt: string
+
   @ApiProperty()
   @Column()
   first_name: string
+
+  @ApiProperty()
+  @Column()
+  last_name: string
 
   @ApiPropertyOptional()
   @Column({nullable: true})

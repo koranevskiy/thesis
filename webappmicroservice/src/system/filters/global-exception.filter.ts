@@ -18,7 +18,7 @@ class GlobalExceptionFilter implements ExceptionFilter {
     if (exception instanceof DomainException) {
       const statusCode = exception.clientInformation.code ?? HttpStatus.INTERNAL_SERVER_ERROR
       delete exception.clientInformation.code
-      this.logger.error(exception, {name: exception.name, type: 'Domain'})
+      this.logger.error(Object.assign(exception, {name: exception.name, type: 'Domain'}))
       return response.status(statusCode).json(Object.assign(exception.clientInformation, {
         timestamp,
         path: request.path,
@@ -26,7 +26,7 @@ class GlobalExceptionFilter implements ExceptionFilter {
     }
 
     if (exception instanceof DatabaseError) {
-      this.logger.error(exception, {name: exception.name, type: 'Database'})
+      this.logger.error(Object.assign(exception, {type: 'Database'}))
       return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'Ошибка базы данных',
         path,
@@ -37,7 +37,7 @@ class GlobalExceptionFilter implements ExceptionFilter {
     if(exception instanceof ValidationException){
       return response.status(HttpStatus.BAD_REQUEST).json(exception.errors)
     }
-    this.logger.error(exception, {name: exception.name, type: 'Server'})
+    this.logger.error(Object.assign(exception, {type: 'Server'}))
     return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Ошибка сервера',
       path,

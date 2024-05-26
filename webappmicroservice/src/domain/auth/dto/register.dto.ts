@@ -5,29 +5,29 @@ import { DefaultRolesEnum } from 'src/domain/auth/roles.enum'
 
 export class RegisterDto {
 
-  @ApiProperty()
+  @ApiProperty({example: 'Виктор'})
   @IsString()
   @MaxLength(1024)
   @IsNotEmpty()
   firstName: string
 
-  @ApiProperty()
+  @ApiProperty({example: 'Дудка'})
   @IsString()
   @MaxLength(1024)
   @IsNotEmpty()
   lastName: string
 
-  @ApiProperty()
+  @ApiProperty({example: 'Геннадьевич'})
   @IsString()
   @MaxLength(1024)
   middleName: string
 
-  @ApiProperty()
+  @ApiProperty({example: 'unique@gmail.com'})
   @IsEmail()
   @IsNotEmpty()
   email: string
 
-  @ApiProperty()
+  @ApiProperty({example: 'strong-password'})
   @IsString()
   @MinLength(5)
   @MaxLength(40)
