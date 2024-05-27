@@ -7,8 +7,8 @@ export const App = () => {
 
   return (
     <ErrorDialog>
-      <CssBaseline/>
-      <AppRouter/>
+      <CssBaseline />
+        <AppRouter />
     </ErrorDialog>
 
   )

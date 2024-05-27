@@ -1,10 +1,9 @@
 import { AuthLayout } from 'src/pages/auth/auth-layout.tsx'
-import { Button, Link, Stack, TextField } from '@mui/material'
+import { Button, Stack, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import { useFetch } from 'src/shared/hooks/use-fetch.ts'
-import AuthModel from 'src/shared/models/auth.model.ts'
-import { useNavigate } from 'react-router-dom'
-import { AppRoutesEnum } from 'src/shared/router/app-routes.enum.ts'
+import { flowResult } from 'mobx'
+import RootModel from 'src/shared/models/root.model.ts'
 
 
 const initialValues = {
@@ -14,11 +13,10 @@ const initialValues = {
 
 export const LoginPage = () => {
 
-  const {execute: login, isLoading, error} = useFetch({
-    requestCb: AuthModel.login
+  const {execute: login, isLoading} = useFetch({
+    requestCb: async (params) => flowResult(RootModel.authModel.login(params))
   })
 
-  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues,
@@ -32,10 +30,7 @@ export const LoginPage = () => {
       if (!formValues.email || !formValues.password) {
         return
       }
-      const {error} = await login(formValues)
-      if(!error) {
-        navigate(AppRoutesEnum.Dashboard)
-      }
+       await login(formValues)
     },
   })
 

@@ -22,12 +22,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import MailIcon from '@mui/icons-material/Mail'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
-import UserModel from 'src/shared/models/user.model.ts'
 import { Avatar } from 'src/shared/components/avatar/avatar.tsx'
 import { useFetch } from 'src/shared/hooks/use-fetch.ts'
-import AuthService from 'src/shared/services/auth.service.ts'
-import { useNavigate } from 'react-router-dom'
-import { AppRoutesEnum } from 'src/shared/router/app-routes.enum.ts'
+import { flowResult } from 'mobx'
+import RootModel from 'src/shared/models/root.model.ts'
 
 
 const drawerWidth = 240
@@ -89,21 +87,16 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const navigate = useNavigate()
-
   const {isLoading, execute: logout} = useFetch({
-    requestCb: AuthService.logout
+    requestCb: async () => flowResult(RootModel.authModel.logout())
   })
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)
 
   const handleClose = () => setAnchorEl(null)
 
   const onLogout = async () => {
-    const {error} = await logout()
+    await logout()
     handleClose()
-    if(!error) {
-      navigate(AppRoutesEnum.Login)
-    }
   }
 
 
@@ -127,7 +120,7 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
           <Typography variant='h6' noWrap component='div' flexGrow={1}>
             Панель управления
           </Typography>
-          <Avatar user={UserModel.user!} onClick={handleClick} />
+          <Avatar user={RootModel.userModel.user!} onClick={handleClick} />
           <Menu
             id='basic-menu'
             anchorEl={anchorEl}
