@@ -34,7 +34,7 @@ export const useFetch = <Response>(params: UseFetchParams<Response>) => {
 }
 
 
-interface UseFetchParams <Response = void>{
-  requestCb: (...param:any[]) => Promise<Response>
+interface UseFetchParams <Response = void, CbType = void>{
+  requestCb: (...param: any) => Promise<Response>
   notShowDialogError?: boolean
 }

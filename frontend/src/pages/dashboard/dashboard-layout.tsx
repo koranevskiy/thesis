@@ -1,10 +1,9 @@
 import { observer } from 'mobx-react-lite'
-import { FC, PropsWithChildren, useState } from 'react'
-import { styled, useTheme } from '@mui/material/styles';
+import { FC, PropsWithChildren, useState, MouseEvent } from 'react'
+import { styled, useTheme } from '@mui/material/styles'
 import {
   Box,
   IconButton,
-  Stack,
   Toolbar,
   Typography,
   Drawer,
@@ -14,15 +13,24 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
 } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import MailIcon from '@mui/icons-material/Mail';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import MenuIcon from '@mui/icons-material/Menu'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import MailIcon from '@mui/icons-material/Mail'
+import InboxIcon from '@mui/icons-material/MoveToInbox'
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
+import UserModel from 'src/shared/models/user.model.ts'
+import { Avatar } from 'src/shared/components/avatar/avatar.tsx'
+import { useFetch } from 'src/shared/hooks/use-fetch.ts'
+import AuthService from 'src/shared/services/auth.service.ts'
+import { useNavigate } from 'react-router-dom'
+import { AppRoutesEnum } from 'src/shared/router/app-routes.enum.ts'
 
-const drawerWidth = 240;
+
+const drawerWidth = 240
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -41,7 +49,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     }),
     marginLeft: 0,
   }),
-}));
+}))
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -62,7 +70,7 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
-}));
+}))
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -71,20 +79,36 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
-}));
+}))
 
 
 export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) => {
   const theme = useTheme()
+
   const [open, setOpen] = useState(false)
 
-  const handleDrawerOpen = () => {
-    setOpen(true)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  const navigate = useNavigate()
+
+  const {isLoading, execute: logout} = useFetch({
+    requestCb: AuthService.logout
+  })
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)
+
+  const handleClose = () => setAnchorEl(null)
+
+  const onLogout = async () => {
+    const {error} = await logout()
+    handleClose()
+    if(!error) {
+      navigate(AppRoutesEnum.Login)
+    }
   }
 
-  const handleDrawerClose = () => {
-    setOpen(false)
-  }
+
+  const handleDrawerOpen = () => setOpen(true)
+  const handleDrawerClose = () => setOpen(false)
 
   // @ts-ignore
   return (
@@ -100,9 +124,21 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant='h6' noWrap component='div'>
+          <Typography variant='h6' noWrap component='div' flexGrow={1}>
             Панель управления
           </Typography>
+          <Avatar user={UserModel.user!} onClick={handleClick} />
+          <Menu
+            id='basic-menu'
+            anchorEl={anchorEl}
+            open={!!anchorEl}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+          >
+            <MenuItem onClick={onLogout} disabled={isLoading}>{isLoading ? 'Выходим...' : 'Выйти'}</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -123,7 +159,7 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
-        <Divider/>
+        <Divider />
         <List>
           {['All mail', 'Trash', 'Spam'].map((text, index) => (
             <ListItem key={text} disablePadding>
@@ -136,7 +172,7 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
             </ListItem>
           ))}
         </List>
-        <Divider/>
+        <Divider />
       </Drawer>
       <Main open={open}>
         <DrawerHeader />

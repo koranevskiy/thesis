@@ -8,6 +8,10 @@ class StorageService {
   static get(key: string) {
     return localStorage.getItem(key)
   }
+
+  static delete(key: string) {
+    localStorage.removeItem(key)
+  }
 }
 
 export default StorageService
