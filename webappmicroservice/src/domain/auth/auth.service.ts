@@ -89,8 +89,10 @@ export class AuthService{
       throw new DomainException({code: HttpStatus.BAD_REQUEST, message: 'Невалидный токен'})
     }
     // определяем кол-во пройденных дней
-    const dayQntPassed = Math.ceil((Date.now() - +refreshToken.update_at) / (1000 * 60 * 24))
+    const day = 1000 * 60 * 60 * 24
+    const dayQntPassed = Math.ceil((Date.now() - +refreshToken.update_at) / (day))
     if(dayQntPassed >= 30) {
+      await refreshToken.remove()
       throw new DomainException({code: HttpStatus.UNAUTHORIZED, message: 'Рефрешь токен истек'})
     }
     // обновляем время жизни токена
