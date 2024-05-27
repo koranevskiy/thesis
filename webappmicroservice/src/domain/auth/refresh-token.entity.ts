@@ -8,7 +8,7 @@ export class RefreshToken extends BaseEntityModel {
   @PrimaryGeneratedColumn("uuid")
   uuid: string
 
-  @Column({select: false})
+  @Column()
   user_id: number
 
   @OneToOne(() => User)

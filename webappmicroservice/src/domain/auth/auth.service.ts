@@ -82,7 +82,7 @@ export class AuthService{
   }
 
   async refresh(dto: RefreshDto): Promise<TokensDto> {
-    const refreshToken = await RefreshToken.findOneBy({
+    let refreshToken = await RefreshToken.findOneBy({
       uuid: dto.refresh_token
     })
     if(!refreshToken) {
@@ -94,8 +94,7 @@ export class AuthService{
       throw new DomainException({code: HttpStatus.UNAUTHORIZED, message: 'Рефрешь токен истек'})
     }
     // обновляем время жизни токена
-    await refreshToken.save()
-
+    refreshToken = await refreshToken.save()
     const access_token = await this.jwtService.sign({user_id: refreshToken.user_id})
     return {
       access_token,
