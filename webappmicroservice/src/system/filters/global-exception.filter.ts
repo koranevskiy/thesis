@@ -35,7 +35,9 @@ class GlobalExceptionFilter implements ExceptionFilter {
     }
 
     if (exception instanceof ValidationException) {
-      return response.status(HttpStatus.BAD_REQUEST).json(exception.errors);
+      return response
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: "Не валидные данные", type: "Validation", errors: exception.errors });
     }
     this.logger.error(Object.assign(exception, { type: "Server" }));
     return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
