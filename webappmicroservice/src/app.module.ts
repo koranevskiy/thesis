@@ -7,6 +7,9 @@ import { LoggerModule } from "#system/logger/logger.module";
 import { CustomLogger } from "#system/logger/logger";
 import { AuthJwtModule } from "#system/auth/auth-jwt.module";
 import { AuthModule } from "src/domain/auth/auth.module";
+import { CameraModule } from "src/domain/camera/camera.module";
+import { S3Config, s3Config } from "#config/s3.config";
+import { S3Module } from "#system/s3/s3.module";
 
 @Module({
   imports: [
@@ -14,7 +17,7 @@ import { AuthModule } from "src/domain/auth/auth.module";
       envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
       ignoreEnvFile: process.env.NODE_ENV !== "local",
-      load: [databaseConfig, appConfig],
+      load: [databaseConfig, appConfig, s3Config],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -28,9 +31,11 @@ import { AuthModule } from "src/domain/auth/auth.module";
       },
       inject: [ConfigService],
     }),
+    S3Module,
     LoggerModule,
     AuthJwtModule,
     AuthModule,
+    CameraModule,
   ],
   providers: [CustomLogger],
 })

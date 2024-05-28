@@ -7,6 +7,8 @@ import { ProtectedRoute } from "src/app/router/protected-route.tsx";
 import { AuthRoute } from "src/app/router/auth-route.tsx";
 import { RegisterPage } from "src/pages/auth/register/register-page.tsx";
 import { AuthLayout } from "src/pages/auth/auth-layout.tsx";
+import { DashboardLayout } from "src/pages/dashboard/dashboard-layout.tsx";
+import { AddCameraPage } from "src/pages/dashboard/add-camera/add-camera-page.tsx";
 
 export const AppRouter = () => {
   return (
@@ -31,15 +33,16 @@ export const AppRouter = () => {
             }
           />
         </Route>
-
         <Route
-          path={AppRoutesEnum.Dashboard}
           element={
             <ProtectedRoute>
-              <HomePage />
+              <DashboardLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path={AppRoutesEnum.Dashboard} element={<HomePage />} />
+          <Route path={AppRoutesEnum.DashboardCreateCamera} element={<AddCameraPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
