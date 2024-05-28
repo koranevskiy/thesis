@@ -14,3 +14,16 @@ export interface LoginResponse {
   user: User;
   tokens: TokensResponse;
 }
+
+export interface RegisterDto {
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  password: string;
+  role: DefaultRole;
+}
+
+export enum DefaultRole {
+  Admin = "admin",
+  User = "user",
+}

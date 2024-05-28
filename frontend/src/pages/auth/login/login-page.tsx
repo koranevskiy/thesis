@@ -1,5 +1,4 @@
-import { AuthLayout } from "src/pages/auth/auth-layout.tsx";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { useFetch } from "src/shared/hooks/use-fetch.ts";
 import { flowResult } from "mobx";
@@ -38,51 +37,50 @@ export const LoginPage = () => {
   const onRegClick = () => navigate(AppRoutesEnum.Register);
 
   return (
-    <AuthLayout>
-      <Stack justifyContent="center" height="100%" component="form" onSubmit={formik.handleSubmit}>
-        <Stack gap={4}>
-          <Stack gap={2.5}>
-            <TextField
-              label="Email"
-              placeholder="Email"
-              {...formik.getFieldProps("email")}
-              error={!!formik.errors.email}
-              helperText={formik.errors.email}
-            />
-            <TextField
-              label="Пароль"
-              placeholder="Пароль"
-              type="password"
-              {...formik.getFieldProps("password")}
-              error={!!formik.errors.password}
-              helperText={formik.errors.password}
-            />
-          </Stack>
-          <Stack direction="row" gap={2} justifyContent="space-between">
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                flex: "1 1 auto",
-              }}
-              type="submit"
-              disabled={isLoading}
-            >
-              {isLoading ? "Загрузка..." : "Войти"}
-            </Button>
-            <Button
-              sx={{
-                flex: "1 1 auto",
-              }}
-              variant="outlined"
-              disabled={isLoading}
-              onClick={onRegClick}
-            >
-              Зарегистрироваться
-            </Button>
-          </Stack>
+    <Stack justifyContent="center" height="100%" component="form" onSubmit={formik.handleSubmit} gap={2}>
+      <Typography variant="h4">Логин</Typography>
+      <Stack gap={4}>
+        <Stack gap={2.5}>
+          <TextField
+            label="Email"
+            placeholder="Email"
+            {...formik.getFieldProps("email")}
+            error={!!formik.errors.email}
+            helperText={formik.errors.email}
+          />
+          <TextField
+            label="Пароль"
+            placeholder="Пароль"
+            type="password"
+            {...formik.getFieldProps("password")}
+            error={!!formik.errors.password}
+            helperText={formik.errors.password}
+          />
+        </Stack>
+        <Stack direction="row" gap={2} justifyContent="space-between">
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              flex: "1 1 auto",
+            }}
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? "Загрузка..." : "Войти"}
+          </Button>
+          <Button
+            sx={{
+              flex: "1 1 auto",
+            }}
+            variant="outlined"
+            disabled={isLoading}
+            onClick={onRegClick}
+          >
+            Зарегистрироваться
+          </Button>
         </Stack>
       </Stack>
-    </AuthLayout>
+    </Stack>
   );
 };

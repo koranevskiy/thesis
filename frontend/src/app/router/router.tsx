@@ -6,13 +6,14 @@ import { HomePage } from "src/pages/dashboard/home/home-page.tsx";
 import { ProtectedRoute } from "src/app/router/protected-route.tsx";
 import { AuthRoute } from "src/app/router/auth-route.tsx";
 import { RegisterPage } from "src/pages/auth/register/register-page.tsx";
+import { AuthLayout } from "src/pages/auth/auth-layout.tsx";
 
 export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<NotFoundPage />} />
-        <Route>
+        <Route element={<AuthLayout />}>
           <Route
             path={AppRoutesEnum.Login}
             element={

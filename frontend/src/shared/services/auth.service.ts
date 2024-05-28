@@ -1,5 +1,5 @@
 import { API_URL } from "src/shared/services/api.constant.ts";
-import { AuthDto, LoginResponse, TokensResponse } from "src/shared/services/types/auth.type.ts";
+import { AuthDto, LoginResponse, RegisterDto, TokensResponse } from "src/shared/services/types/auth.type.ts";
 import axios from "axios";
 import { ApiResponse } from "src/shared/services/types/response.type.ts";
 import { tokenInstance } from "src/shared/services/token-instance.ts";
@@ -21,6 +21,10 @@ class AuthService {
       refresh_token,
     });
     return response.data;
+  }
+
+  async register(dto: RegisterDto) {
+    await axios.post(`${this.baseUrl}/register`, dto);
   }
 }
 

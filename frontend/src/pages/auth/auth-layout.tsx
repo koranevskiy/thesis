@@ -31,5 +31,5 @@ export const AuthLayout: FC<PropsWithChildren<AuthLayoutProps>> = ({ children, t
 };
 
 interface AuthLayoutProps {
-  title: string;
+  title?: string;
 }
