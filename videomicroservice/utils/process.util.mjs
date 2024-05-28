@@ -1,32 +1,30 @@
 import child_process from "node:child_process";
 
-class SpawnProcessBuilder{
+class SpawnProcessBuilder {
   constructor(childProcess) {
-    this._processName = childProcess
-    this.args = []
+    this._processName = childProcess;
+    this.args = [];
   }
 
   get processName() {
-    return this._processName
+    return this._processName;
   }
 
-  add(...args){
-    for(const arg of args) {
-      if(arg) this.args.push(arg)
+  add(...args) {
+    for (const arg of args) {
+      if (arg) this.args.push(arg);
     }
-    return this
+    return this;
   }
 
   argsToString() {
-    return this.args.join(' ')
+    return this.args.join(" ");
   }
 
   run() {
-    this.process = child_process.spawn(this.processName, this.args)
-    return this
+    this.process = child_process.spawn(this.processName, this.args);
+    return this;
   }
 }
 
-export {
-  SpawnProcessBuilder
-}
+export { SpawnProcessBuilder };

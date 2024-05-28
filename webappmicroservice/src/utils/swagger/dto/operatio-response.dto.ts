@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from "@nestjs/swagger";
 
-export class OperatioResponseDto{
+export class OperatioResponseDto {
   @ApiProperty()
-  success: boolean
+  success: boolean;
 
   @ApiProperty()
-  message: string
+  message: string;
 }

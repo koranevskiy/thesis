@@ -1,6 +1,6 @@
-import moment from 'moment'
-import fs from 'node:fs'
-import AWS from 'aws-sdk'
+import moment from "moment";
+import fs from "node:fs";
+import AWS from "aws-sdk";
 
 function extractFileFromBase64(base64File) {
   const mimeType = base64File.match(/^data:(.*\/.*);/);
@@ -13,22 +13,22 @@ class S3Lib {
   }
 
   getFolderName(object) {
-    const fileName = object.path
-    let [fileDate] = fileName.match(/\d{4}-\d{2}-\d{2}-T-\d{2}-\d{2}-\d{2}/gi) || []
-    if(!fileDate) {
-      throw { message: 'Invalid file name for s3 upload' }
+    const fileName = object.path;
+    let [fileDate] = fileName.match(/\d{4}-\d{2}-\d{2}-T-\d{2}-\d{2}-\d{2}/gi) || [];
+    if (!fileDate) {
+      throw { message: "Invalid file name for s3 upload" };
     }
-    const [year, month, dat, hour, minute, second] = fileDate.split('-').filter(item => item !== 'T')
-    const folderName = `${year}/${month}/${dat}`
-    const s3ObjectKey = `${hour}-${minute}-${second}.mp4`
+    const [year, month, dat, hour, minute, second] = fileDate.split("-").filter(item => item !== "T");
+    const folderName = `${year}/${month}/${dat}`;
+    const s3ObjectKey = `${hour}-${minute}-${second}.mp4`;
     return {
       folderName,
-      s3ObjectKey
-    }
+      s3ObjectKey,
+    };
   }
 
   async putObjectsFile(objects) {
-    const self = this
+    const self = this;
     const bucketName = self.bucketName;
     const bufferObjects = await Promise.all(
       objects.map(object => {
@@ -44,8 +44,8 @@ class S3Lib {
       })
     );
     const uploadPromeses = bufferObjects.map(object => {
-      const {folderName, s3ObjectKey} = self.getFolderName(object);
-      const objectKey = `${folderName}/${s3ObjectKey}`
+      const { folderName, s3ObjectKey } = self.getFolderName(object);
+      const objectKey = `${folderName}/${s3ObjectKey}`;
       const objectPayload = {
         Key: objectKey,
         Body: object.buffer,
@@ -63,7 +63,7 @@ class S3Lib {
   }
 
   async createBucket(bucketName) {
-    const self = this
+    const self = this;
     return new Promise((resolve, reject) => {
       self.s3.headBucket({ Bucket: bucketName }, (err, data) => {
         if (!err) {
@@ -136,5 +136,4 @@ class S3Lib {
   }
 }
 
-
-export default new S3Lib()
+export default new S3Lib();

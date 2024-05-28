@@ -1,8 +1,7 @@
-
 export interface ApiResponse<T> {
-  data: T
+  data: T;
   meta: {
-    statusCode: number
-    message: string
-  }
+    statusCode: number;
+    message: string;
+  };
 }

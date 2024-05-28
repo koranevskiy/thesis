@@ -1,35 +1,35 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class RoleDto {
   @ApiProperty()
-  role_id: string
+  role_id: string;
 
   @ApiProperty()
-  role_name: string
+  role_name: string;
 }
 export class UserDto {
-  [x: string]: any
+  [x: string]: any;
   @ApiProperty()
-  user_id: number
+  user_id: number;
 
   @ApiProperty()
-  first_name: string
+  first_name: string;
 
   @ApiProperty()
-  last_name: string
+  last_name: string;
 
   @ApiPropertyOptional()
-  middle_name?: string
+  middle_name?: string;
 
   @ApiProperty()
-  email: string
+  email: string;
 
-  @ApiProperty({isArray: true, type: RoleDto})
-  roles: RoleDto[]
-
-  @ApiProperty()
-  created_at: string
+  @ApiProperty({ isArray: true, type: RoleDto })
+  roles: RoleDto[];
 
   @ApiProperty()
-  updated_at: string
+  created_at: string;
+
+  @ApiProperty()
+  updated_at: string;
 }

@@ -44,7 +44,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      -  "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.security.enabled=false
       - xpack.ml.enabled=false
       - action.destructive_requires_name=false
@@ -67,7 +67,6 @@ services:
       - thesis
     depends_on:
       - elastic
-
 
 networks:
   thesis:

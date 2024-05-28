@@ -1,4 +1,5 @@
 export enum AppRoutesEnum {
-  Login = '/login',
-  Dashboard = '/dashboard'
+  Login = "/login",
+  Register = "/register",
+  Dashboard = "/dashboard",
 }

@@ -1,43 +1,41 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsEnum, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator'
-import { DefaultRolesEnum } from 'src/domain/auth/roles.enum'
-
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { DefaultRolesEnum } from "src/domain/auth/roles.enum";
 
 export class RegisterDto {
-
-  @ApiProperty({example: 'Виктор'})
+  @ApiProperty({ example: "Виктор" })
   @IsString()
   @MaxLength(1024)
   @IsNotEmpty()
-  firstName: string
+  firstName: string;
 
-  @ApiProperty({example: 'Дудка'})
+  @ApiProperty({ example: "Дудка" })
   @IsString()
   @MaxLength(1024)
   @IsNotEmpty()
-  lastName: string
+  lastName: string;
 
-  @ApiProperty({example: 'Геннадьевич'})
+  @ApiProperty({ example: "Геннадьевич" })
   @IsString()
   @MaxLength(1024)
-  middleName: string
+  middleName: string;
 
-  @ApiProperty({example: 'unique@gmail.com'})
+  @ApiProperty({ example: "unique@gmail.com" })
   @IsEmail()
   @IsNotEmpty()
-  email: string
+  email: string;
 
-  @ApiProperty({example: 'strong-password'})
+  @ApiProperty({ example: "strong-password" })
   @IsString()
   @MinLength(5)
   @MaxLength(40)
   @IsNotEmpty()
-  password: string
+  password: string;
 
   @ApiProperty({
-    enum: DefaultRolesEnum
+    enum: DefaultRolesEnum,
   })
   @IsEnum(DefaultRolesEnum)
   @IsNotEmpty()
-  role: DefaultRolesEnum
+  role: DefaultRolesEnum;
 }

@@ -1,0 +1,15 @@
+.idea
+.DB_Store
+minio
+webPgData
+elasticData
+certs
+node_modules
+**/node_modules
+**/dist
+**/build
+**/.git
+**/.svn
+**/.hg
+**/*.jpeg
+**/*.mp4

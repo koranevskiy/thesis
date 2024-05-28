@@ -1,11 +1,15 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   outline: none;
 }
 
-html, body, #root{
+html,
+body,
+#root {
   height: 100%;
   width: 100%;
 }
