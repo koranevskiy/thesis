@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM node:lts-alpine AS build
 WORKDIR /app
-
+ENV IN_DOCKER='true'
 EXPOSE 3000
-RUN npm run start:local
-
+CMD ["npm", "run", "start:local"]

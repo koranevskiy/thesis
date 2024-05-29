@@ -9,3 +9,6 @@ To generate a new migration, use the following command:
 
 To revert a last migration, use the following command:
 `npm run migration:revert --name=your_migration_name --env=your_env`
+
+Start app for local testing use from root folder
+docker compose up -d
