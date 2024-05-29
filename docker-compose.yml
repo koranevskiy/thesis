@@ -68,6 +68,19 @@ services:
     depends_on:
       - elastic
 
+  webapplocal:
+    build:
+      context: .
+      dockerfile: webappmicroservice/Dockerfile-local
+    env_file:
+      - ./webappmicroservice/.env.local
+    volumes:
+      - ./webappmicroservice:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - thesis
+
 networks:
   thesis:
     driver: bridge

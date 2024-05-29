@@ -1,7 +1,14 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiResponse, ApiResponseOptions, getSchemaPath } from "@nestjs/swagger";
+import { ApiResponse, ApiResponseMetadata, getSchemaPath } from "@nestjs/swagger";
 
-export const ApiResponseCustom = (status: number, type: any, options?: ApiResponseOptions) => {
+export const ApiResponseCustom = (status: number, type: any, options?: ApiResponseMetadata) => {
+  const data =
+    options && options.isArray
+      ? {
+          type: "array",
+          items: { allOf: [{ $ref: getSchemaPath(type) }] },
+        }
+      : { type: "object", allOf: [{ $ref: getSchemaPath(type) }] };
   return applyDecorators(
     ApiResponse({
       status,
@@ -10,7 +17,7 @@ export const ApiResponseCustom = (status: number, type: any, options?: ApiRespon
         allOf: [
           {
             properties: {
-              data: { type: "object", allOf: [{ $ref: getSchemaPath(type) }] },
+              data,
               meta: {
                 type: "object",
                 properties: {

@@ -53,7 +53,7 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
 
   // @ts-ignore
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", height: "100%" }}>
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton

@@ -4,13 +4,12 @@ import { FC } from "react";
 import { TextField } from "@mui/material";
 
 export const FormikField: FC<FormikFieldProps> = ({ formik, ...rest }) => {
+  const error = rest.name.split(".").reduce((prev, curr) => {
+    return prev?.[curr];
+  }, formik.errors as any);
+
   return (
-    <TextField
-      {...rest}
-      {...formik.getFieldProps(rest.name)}
-      error={!!formik.errors[rest.name]}
-      helperText={(formik.errors[rest.name] as string) ?? ""}
-    />
+    <TextField {...rest} {...formik.getFieldProps(rest.name)} error={!!error} helperText={(error as string) ?? ""} />
   );
 };
 

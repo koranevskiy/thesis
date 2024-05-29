@@ -90,7 +90,7 @@ export class S3Service {
         secretAccessKey: s3Config.password,
       },
       endpoint: s3Config.url,
-      region: s3Config.region,
+      // region: s3Config.region,
       s3ForcePathStyle: true,
       sslEnabled: s3Config.ssl === "true",
     });

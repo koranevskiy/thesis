@@ -3,4 +3,6 @@ export enum AppRoutesEnum {
   Register = "/register",
   Dashboard = "/dashboard",
   DashboardCreateCamera = "/dashboard/add-camera",
+  DashboardCameraManager = "/dashboard/camera-manager",
+  DashboardCamera = "/dashboard/camera-manager",
 }

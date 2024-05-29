@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const links = [
   { path: AppRoutesEnum.Dashboard, name: "Дэшборд" },
   { path: AppRoutesEnum.DashboardCreateCamera, name: "Добавить камеру" },
+  { path: AppRoutesEnum.DashboardCameraManager, name: "Менеджер камер" },
 ];
 
 export const DrawerLinks = () => {

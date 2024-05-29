@@ -1,0 +1,4 @@
+.env
+.gitlab-ci.yml
+node_modules
+dist
