@@ -31,4 +31,9 @@ export class CameraController {
   async findCameraById(@UserId() user_id: number, @Param("camera_id", ParseIntPipe) camera_id: number) {
     return this.cameraService.findCameraById(user_id, camera_id);
   }
+
+  @Post("/:camera_id/start-container")
+  async startCamera(@UserId() user_id: number, @Param("camera_id", ParseIntPipe) camera_id: number) {
+    return this.cameraService.startContainer(user_id, camera_id);
+  }
 }
