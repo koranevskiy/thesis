@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { SpawnProcessBuilder } from "#utils/process.util.mjs";
-
+import Config from '#config/index.mjs'
 /**
  * @class Singleton class содержащий методы для работы с ffmpeg
  */
@@ -16,7 +16,7 @@ class FfmpegService {
       .add("-use_wallclock_as_timestamps", "1") // использование системных часов для pts (использовать системное время, а не локальное ffmpeg'a)
       .add(
         "-i",
-        "rtsp://video:qG4RXkJ3d63t@10.10.17.29:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif"
+        Config.rtspLink
       ) // входной файл для обработки
       .add("-vcodec", "copy") // скопировать в выходной файл исходный кодек видео (избегаем этапа перекодировки видео)
       .add("-acodec", "copy") // скопировать в выходной файл исходный кодек аудио

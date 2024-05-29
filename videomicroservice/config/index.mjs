@@ -17,6 +17,7 @@ class Config {
     this.loadVideo = {
       loadCronTime: process.env.VIDEO_UPLOAD_CRON_TIME,
     };
+    this.rtspLink = process.env.RTSP_LINK
   }
 }
 
