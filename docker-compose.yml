@@ -40,39 +40,39 @@ services:
     networks:
       - thesis
 
-#    elastic:
-#      image: elasticsearch:8.13.4
-#      restart: always
-#      ports:
-#        - "9200:9200"
-#      env_file:
-#        - .env.local
-#      environment:
-#        - discovery.type=single-node
-#        - bootstrap.memory_lock=true
-#        - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-#        - xpack.security.enabled=false
-#        - xpack.ml.enabled=false
-#        - action.destructive_requires_name=false
-#      volumes:
-#        - ./volumes/elasticData:/usr/share/elasticsearch/data
-#      networks:
-#        - thesis
-#      ulimits:
-#        memlock:
-#          soft: -1
-#          hard: -1
-#    kibana:
-#      image: kibana:8.13.4
-#      restart: always
-#      ports:
-#        - "5601:5601"
-#      env_file:
-#        - .env.local
-#      networks:
-#        - thesis
-#      depends_on:
-#        - elastic
+  #    elastic:
+  #      image: elasticsearch:8.13.4
+  #      restart: always
+  #      ports:
+  #        - "9200:9200"
+  #      env_file:
+  #        - .env.local
+  #      environment:
+  #        - discovery.type=single-node
+  #        - bootstrap.memory_lock=true
+  #        - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+  #        - xpack.security.enabled=false
+  #        - xpack.ml.enabled=false
+  #        - action.destructive_requires_name=false
+  #      volumes:
+  #        - ./volumes/elasticData:/usr/share/elasticsearch/data
+  #      networks:
+  #        - thesis
+  #      ulimits:
+  #        memlock:
+  #          soft: -1
+  #          hard: -1
+  #    kibana:
+  #      image: kibana:8.13.4
+  #      restart: always
+  #      ports:
+  #        - "5601:5601"
+  #      env_file:
+  #        - .env.local
+  #      networks:
+  #        - thesis
+  #      depends_on:
+  #        - elastic
 
   webapplocal:
     build:
