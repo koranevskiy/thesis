@@ -39,8 +39,7 @@ async function loadVideosToS3() {
         await S3.putObjectsFile([{ path: filePath }]);
         try {
           fs.unlinkSync(filePath);
-        }catch (e) {
-        }
+        } catch (e) {}
       }
     }
     prevFile = filename;
