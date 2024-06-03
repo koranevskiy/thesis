@@ -26,7 +26,10 @@ class CameraService {
   }
 
   async redirectToMinioConsole(camera_id: number) {
-    await tokenInstance.get(`/cameras/${camera_id}/redirect-minio-console`);
+    const { data } = await tokenInstance.get(`/cameras/${camera_id}/minio`);
+  }
+  async getMinioPage(uuid_name: string) {
+    const { data } = await tokenInstance.get(`/:uuid_name/minio`);
   }
 }
 

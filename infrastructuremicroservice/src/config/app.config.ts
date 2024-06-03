@@ -8,10 +8,12 @@ export interface AppConfig {
   minio_console_port: number;
   minio_container_prefix: string;
   video_container_prefix: string;
+  minio_main_container_name: string;
   network_name: string;
   minio_image_name: string;
   videomicroservice_image_name: string;
   bucket_name: string;
+  minio_alias: string;
 }
 
 export default registerAs("app", () => ({
@@ -25,4 +27,6 @@ export default registerAs("app", () => ({
   minio_image_name: "minio/minio:latest",
   videomicroservice_image_name: "videomicroservice:latest",
   bucket_name: "videos",
+  minio_main_container_name: "bntu-thesis-minio-1",
+  minio_alias: "myminio",
 }));

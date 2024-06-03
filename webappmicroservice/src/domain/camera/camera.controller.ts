@@ -3,8 +3,10 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpStatus,
+  Next,
   Param,
   ParseIntPipe,
   Post,
@@ -26,47 +28,54 @@ import * as proxy from "express-http-proxy";
 @ApiExtraModels(Camera)
 @ApiTags("Камеры")
 @Controller("cameras")
-@UseGuards(AuthGuard)
 export class CameraController {
   constructor(private readonly cameraService: CameraService) {}
 
   @ApiResponseCustom(HttpStatus.CREATED, Camera)
   @Post("/add-camera")
+  @UseGuards(AuthGuard)
   async addCamera(@UserId() user_id: number, @Body() dto: AddCameraDto) {
     return this.cameraService.addCamera(user_id, dto);
   }
 
   @ApiResponseCustom(HttpStatus.OK, Camera, { isArray: true })
   @Get("/")
+  @UseGuards(AuthGuard)
   async findCamera(@UserId() user_id: number) {
     return this.cameraService.findCamerasByUser(user_id);
   }
 
   @ApiResponseCustom(HttpStatus.OK, Camera)
   @Get("/:camera_id")
+  @UseGuards(AuthGuard)
   async findCameraById(@UserId() user_id: number, @Param("camera_id", ParseIntPipe) camera_id: number) {
     return this.cameraService.findCameraById(user_id, camera_id);
   }
 
   @Post("/:camera_id/start-container")
+  @UseGuards(AuthGuard)
   async startCamera(@UserId() user_id: number, @Param("camera_id", ParseIntPipe) camera_id: number) {
     return this.cameraService.startContainer(user_id, camera_id);
   }
 
-  @Get("/:camera_id/redirect-minio-console")
-  @UseGuards(CameraGuard)
-  @HttpCode(HttpStatus.MOVED_PERMANENTLY)
-  async redirectToMinio(
-    @Param("camera_id", ParseIntPipe) camera_id: number,
-    @CameraEntity() camera: Camera,
-    @Res() response: Response,
-    @Req() request: Request
-  ) {
-    // response.status(HttpStatus.MOVED_PERMANENTLY)
-    return proxy(`http://minio-${camera.uuid_name}:9001`, {
+  @Get("/minio/ui")
+  async proxyMinioConsole(@Res() response: Response, @Req() request: Request, @Next() next: any) {
+    response.status(HttpStatus.MOVED_PERMANENTLY);
+    return proxy(`http://bntu-thesis-minio-1:9001/`, {
       proxyReqPathResolver: req => {
-        return `/browser`;
+        console.log({ path: req.path });
+        return req.path;
       },
-    })(request, response, null);
+    })(request, response, next);
+  }
+
+  @Get("/minio")
+  async proxyMinioServer(@Res() response: Response, @Req() request: Request, @Next() next: any) {
+    return proxy(`http://bntu-thesis-minio-1:9000`, {
+      proxyReqPathResolver: req => {
+        console.log({ path: req.path });
+        return req.path;
+      },
+    })(request, response, next);
   }
 }

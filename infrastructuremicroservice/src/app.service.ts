@@ -24,20 +24,43 @@ export class AppService {
 
   async createVideoContainers(dto: CreateVideoContainersDto) {
     const resultObj = {} as Record<string, any>;
+    // Решил оставить 1 минио для всех
+    // try {
+    //   await this.startMinioContainer(dto.uuid_name, dto.minio_container);
+    //   resultObj.minio = { success: true };
+    // } catch (e) {
+    //   console.error("minio", e);
+    //   resultObj.minio = { success: false };
+    // }
     try {
-      await this.startMinioContainer(dto.uuid_name, dto.minio_container);
-      resultObj.minio = { success: true };
+      const { container, info } = await this.getMinioContainer();
+      const network_settings = info.NetworkSettings.Networks[info.HostConfig.NetworkMode];
+      console.log(`http://${network_settings.IPAddress}:${this.cfg.minio_port}`);
+      const data = await container.exec({
+        Cmd: [
+          "mc",
+          "admin",
+          "user",
+          "add",
+          `${this.cfg.minio_alias}`,
+          `${dto.minio_container.minio_login}`,
+          `${dto.minio_container.minio_password}`,
+        ],
+      });
+      await data.start({
+        Tty: true,
+      });
+      // console.log(info.NetworkSettings);
     } catch (e) {
       console.error("minio", e);
-      resultObj.minio = { success: false };
     }
-    try {
-      await this.startVideoContainer(dto);
-      resultObj.video = { success: true };
-    } catch (e) {
-      console.error("video", e);
-      resultObj.video = { success: false };
-    }
+    // try {
+    //   await this.startVideoContainer(dto);
+    //   resultObj.video = { success: true };
+    // } catch (e) {
+    //   console.error("video", e);
+    //   resultObj.video = { success: false };
+    // }
 
     return resultObj;
   }
@@ -66,7 +89,12 @@ export class AppService {
           // HostPort: this.cfg.minio_console_port
         },
       },
-      Env: [`MINIO_ROOT_USER=${minio.minio_login}`, `MINIO_ROOT_PASSWORD=${minio.minio_password}`],
+      Env: [
+        `MINIO_ROOT_USER=${minio.minio_login}`,
+        `MINIO_ROOT_PASSWORD=${minio.minio_password}`,
+        `MINIO_SERVER_URL=http://${name}`,
+        `MINIO_BROWSER_REDIRECT_URL=http://${name}/ui`,
+      ],
       HostConfig: {
         NetworkMode: this.cfg.network_name,
         Binds: [`${targetPath}:/data`],
@@ -76,6 +104,13 @@ export class AppService {
     await container.start();
 
     return true;
+  }
+
+  async getMinioContainer() {
+    const list = await Docker.listContainers();
+    const info = list.find(item => item.Names.includes("/" + this.cfg.minio_main_container_name));
+    const container = await Docker.getContainer(info.Id);
+    return { container, info };
   }
 
   async startVideoContainer(options: CreateVideoContainersDto) {
