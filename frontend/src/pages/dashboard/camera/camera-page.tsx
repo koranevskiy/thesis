@@ -48,16 +48,17 @@ export const CameraPage = () => {
   }, [camera_id]);
 
   useEffect(() => {
-    let timer: number;
+    let stop = false;
     const inspect = async () => {
-      timer = setTimeout(async () => {
-        await inspectVideo(camera_id);
+      await inspectVideo(camera_id);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (!stop) {
         inspect();
-      }, 4000);
+      }
     };
     inspect();
     return () => {
-      if (timer) clearTimeout(timer);
+      stop = true;
     };
   }, [camera_id]);
 
