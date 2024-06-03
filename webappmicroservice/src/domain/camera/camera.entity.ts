@@ -6,6 +6,12 @@ import { User } from "src/domain/user/entities/user.entity";
 export class CameraConfig {
   @ApiProperty()
   rtsp_link: string;
+
+  @ApiProperty()
+  minio_login: string;
+
+  @ApiProperty()
+  minio_password: string;
 }
 
 @Entity("cameras")

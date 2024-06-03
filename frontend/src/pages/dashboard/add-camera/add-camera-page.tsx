@@ -14,7 +14,9 @@ const schema = Yup.object().shape({
   camera_name: Yup.string().min(1).required(),
   config: Yup.object()
     .shape({
-      rtsp_url: Yup.string().required(),
+      rtsp_link: Yup.string().required(),
+      minio_login: Yup.string().required(),
+      minio_password: Yup.string().required(),
     })
     .required(),
 });
@@ -23,6 +25,8 @@ const initialValues = {
   camera_name: "",
   config: {
     rtsp_link: "",
+    minio_login: "",
+    minio_password: "",
   },
 };
 
@@ -44,7 +48,6 @@ export const AddCameraPage = () => {
       }
     },
   });
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -56,7 +59,7 @@ export const AddCameraPage = () => {
       <Grid item xs={8} alignSelf="center" justifySelf="center" component="form" onSubmit={formik.handleSubmit}>
         <Paper sx={{ p: 3 }}>
           <Grid container gap={2}>
-            <Grid>
+            <Grid item xs={12}>
               <Typography variant="h6">Конфиг камеры</Typography>
             </Grid>
             <Grid item xs={12}>
@@ -68,6 +71,27 @@ export const AddCameraPage = () => {
                 name="config.rtsp_link"
                 label="RTSP url"
                 placeholder="RTSP url камеры"
+                formik={formik}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Конфиг Minio S3</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <FormikField
+                fullWidth
+                name="config.minio_login"
+                label="Minio логин"
+                placeholder="Minio логин"
+                formik={formik}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormikField
+                fullWidth
+                name="config.minio_password"
+                label="Minio пароль"
+                placeholder="Minio пароль"
                 formik={formik}
               />
             </Grid>

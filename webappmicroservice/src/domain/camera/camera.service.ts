@@ -8,7 +8,8 @@ import { S3Service } from "#system/s3/s3.service";
 import { HttpService } from "@nestjs/axios";
 import { UserService } from "src/domain/user/user.service";
 import { DefaultRolesEnum } from "src/domain/auth/roles.enum";
-import * as child_process from "node:child_process";
+import { ConfigService } from "@nestjs/config";
+import { AppConfig } from "#config/app.config";
 
 @Injectable()
 export class CameraService {
@@ -18,7 +19,8 @@ export class CameraService {
   constructor(
     private readonly s3Service: S3Service,
     private readonly httpService: HttpService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly configService: ConfigService
   ) {}
 
   async addCamera(user_id: number, dto: AddCameraDto) {
@@ -87,54 +89,19 @@ export class CameraService {
   }
 
   async startContainer(user_id: number, camera_id: number) {
+    const config = this.configService.get<AppConfig>("app");
     const camera = await this.findCameraById(user_id, camera_id);
-    const camera_uuid = camera.uuid_name;
-    const minio_name = `minio${camera_uuid}`;
-    const video_name = `video${camera_uuid}`;
-    const minio_port = 9000;
+    const { data } = await this.httpService.axiosRef.post(`${config.infrastructureApiLink}/create-video-containers`, {
+      uuid_name: camera.uuid_name,
+      video_container: {
+        rtsp_link: camera.config.rtsp_link,
+      },
+      minio_container: {
+        minio_login: camera.config.minio_login,
+        minio_password: camera.config.minio_password,
+      },
+    });
 
-    const network = "thesis";
-    const minio_env = {
-      MINIO_ROOT_USER: "admin",
-      MINIO_ROOT_PASSWORD: "admin123",
-    };
-    const minio_env_str = Object.entries(minio_env).reduce((prev, [key, value]) => {
-      return prev + ` -e ${key}='${value}'`;
-    }, "");
-    await new Promise((resolve, reject) => {
-      child_process.exec(
-        `docker run minio/minio:latest -d --network ${network} -p :9000 -p :9001 ${minio_env_str} --name ${minio_name}`,
-        err => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(true);
-        }
-      );
-    });
-    const video_envs = {
-      S3_LOGIN: "admin",
-      S3_PASS: "admin123",
-      S3_URL: `http://${minio_name}:${minio_port}`,
-      BUCKET_NAME: "videos",
-      RTSP_LINK: camera.config.rtsp_link,
-    };
-    const video_env_str = Object.entries(video_envs).reduce((prev, [key, value]) => {
-      return prev + ` -e ${key}='${value}'`;
-    }, "");
-    await new Promise((resolve, reject) => {
-      child_process.exec(
-        `docker run videomicroservice:latest -d --network ${network} ${video_env_str} --name ${video_name}`,
-        err => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(true);
-        }
-      );
-    });
-    return true;
+    return data;
   }
 }

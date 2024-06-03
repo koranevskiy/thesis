@@ -7,6 +7,16 @@ export class CameraConfigDto {
   @IsString()
   @IsNotEmpty()
   rtsp_link: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  minio_login: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  minio_password: string;
 }
 
 export class AddCameraDto {

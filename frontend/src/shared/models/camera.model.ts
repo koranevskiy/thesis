@@ -27,6 +27,12 @@ export class CameraModel {
     const camera: Camera = yield CameraService.getCamera(camera_id);
     return camera;
   }
+
+  *startCameraContainers(camera_id: number) {
+    const result: Record<string, any> = yield CameraService.startCameraContainers(camera_id);
+    return result;
+  }
+
   setCurrentCamera(camera: Camera | null) {
     this.currentCamera = camera;
   }

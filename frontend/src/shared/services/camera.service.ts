@@ -17,6 +17,17 @@ class CameraService {
     const { data } = await tokenInstance.get<ApiResponse<Camera>>(`/cameras/${camera_id}`);
     return data.data;
   }
+
+  async startCameraContainers(camera_id: number) {
+    const { data } = await tokenInstance.post<ApiResponse<Record<string, any>>>(
+      `/cameras/${camera_id}/start-container`
+    );
+    return data.data;
+  }
+
+  async redirectToMinioConsole(camera_id: number) {
+    await tokenInstance.get(`/cameras/${camera_id}/redirect-minio-console`);
+  }
 }
 
 export default new CameraService();

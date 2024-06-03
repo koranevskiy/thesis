@@ -10,7 +10,7 @@ services:
       - .env.local
     restart: on-failure
     volumes:
-      - ./minio:/data
+      - ./volumes/minio:/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -23,7 +23,7 @@ services:
     image: postgres
     restart: always
     volumes:
-      - ./webPgData:/var/lib/postgresql/data
+      - ./volumes/webPgData:/var/lib/postgresql/data
     env_file:
       - .env.local
     ports:
@@ -40,39 +40,39 @@ services:
     networks:
       - thesis
 
-#  elastic:
-#    image: elasticsearch:8.13.4
-#    restart: always
-#    ports:
-#      - "9200:9200"
-#    env_file:
-#      - .env.local
-#    environment:
-#      - discovery.type=single-node
-#      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-#      - xpack.security.enabled=false
-#      - xpack.ml.enabled=false
-#      - action.destructive_requires_name=false
-#    volumes:
-#      - ./elasticData:/usr/share/elasticsearch/data
-#    networks:
-#      - thesis
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#  kibana:
-#    image: kibana:8.13.4
-#    restart: always
-#    ports:
-#      - "5601:5601"
-#    env_file:
-#      - .env.local
-#    networks:
-#      - thesis
-#    depends_on:
-#      - elastic
+#    elastic:
+#      image: elasticsearch:8.13.4
+#      restart: always
+#      ports:
+#        - "9200:9200"
+#      env_file:
+#        - .env.local
+#      environment:
+#        - discovery.type=single-node
+#        - bootstrap.memory_lock=true
+#        - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+#        - xpack.security.enabled=false
+#        - xpack.ml.enabled=false
+#        - action.destructive_requires_name=false
+#      volumes:
+#        - ./volumes/elasticData:/usr/share/elasticsearch/data
+#      networks:
+#        - thesis
+#      ulimits:
+#        memlock:
+#          soft: -1
+#          hard: -1
+#    kibana:
+#      image: kibana:8.13.4
+#      restart: always
+#      ports:
+#        - "5601:5601"
+#      env_file:
+#        - .env.local
+#      networks:
+#        - thesis
+#      depends_on:
+#        - elastic
 
   webapplocal:
     build:
@@ -84,6 +84,17 @@ services:
       - ./webappmicroservice:/app
     ports:
       - "3000:3000"
+    networks:
+      - thesis
+  infrastructurelocal:
+    build:
+      context: .
+      dockerfile: infrastructuremicroservice/Dockerfile-local
+    volumes:
+      - ./infrastructuremicroservice:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "4000:4000"
     networks:
       - thesis
 

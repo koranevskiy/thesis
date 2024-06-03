@@ -13,3 +13,5 @@ node_modules
 **/.hg
 **/*.jpeg
 **/*.mp4
+analyticmicroservice
+volumes

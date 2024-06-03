@@ -1,5 +1,7 @@
 export interface CameraConfig {
   rtsp_link: string;
+  minio_login: string;
+  minio_password: string;
 }
 
 export interface CameraDto {

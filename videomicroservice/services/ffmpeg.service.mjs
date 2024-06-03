@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { SpawnProcessBuilder } from "#utils/process.util.mjs";
-import Config from '#config/index.mjs'
+import Config from "#config/index.mjs";
 /**
  * @class Singleton class содержащий методы для работы с ffmpeg
  */
@@ -14,10 +14,7 @@ class FfmpegService {
       // .add('-loglevel', 'error')               // логирование только ошибок
       .add("-rtsp_transport", "tcp") // передача пакетов по tcp, по умолчанию udp (теряются пакеты часто)
       .add("-use_wallclock_as_timestamps", "1") // использование системных часов для pts (использовать системное время, а не локальное ffmpeg'a)
-      .add(
-        "-i",
-        Config.rtspLink
-      ) // входной файл для обработки
+      .add("-i", Config.rtspLink) // входной файл для обработки
       .add("-vcodec", "copy") // скопировать в выходной файл исходный кодек видео (избегаем этапа перекодировки видео)
       .add("-acodec", "copy") // скопировать в выходной файл исходный кодек аудио
       .add("-f", "segment") // указывает формат выходного файла -f
