@@ -12,11 +12,9 @@ RUN \
 COPY . .
 ENV NODE_ENV production
 ENV TZ=Europe/Minsk
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
+RUN apk update && apk add && apk add ffmpeg
 
 
-USER nodejs
+
 EXPOSE 8080
 CMD ["node", "index.mjs"]

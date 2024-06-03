@@ -35,8 +35,9 @@ export class AppService {
     try {
       const { container, info } = await this.getMinioContainer();
       const network_settings = info.NetworkSettings.Networks[info.HostConfig.NetworkMode];
-      console.log(`http://${network_settings.IPAddress}:${this.cfg.minio_port}`);
-      const data = await container.exec({
+
+      // Создание пользователя
+      let data = await container.exec({
         Cmd: [
           "mc",
           "admin",
@@ -47,20 +48,97 @@ export class AppService {
           `${dto.minio_container.minio_password}`,
         ],
       });
-      await data.start({
-        Tty: true,
+      await data.start({});
+
+      // Создание бакета
+      const bucket_name = `${this.cfg.bucket_name}-${dto.uuid_name}`;
+      data = await container.exec({
+        Cmd: ["mc", "mb", `${this.cfg.minio_alias}/${bucket_name}`],
       });
-      // console.log(info.NetworkSettings);
+      await data.start({});
+
+      // Создание политики
+      const policy = `{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:PutBucketPolicy",
+          "s3:GetBucketPolicy",
+          "s3:DeleteBucketPolicy",
+          "s3:ListAllMyBuckets",
+          "s3:ListBucket"
+        ],
+        "Resource": [
+          "arn:aws:s3:::${bucket_name}"
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:ListBucketMultipartUploads"
+        ],
+        "Resource": [
+          "arn:aws:s3:::${bucket_name}"
+        ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:AbortMultipartUpload",
+          "s3:DeleteObject",
+          "s3:GetObject",
+          "s3:ListMultipartUploadParts",
+          "s3:PutObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::${bucket_name}/*"
+        ]
+      }
+    ]
+  }`;
+      const policy_file_path = "/tmp/bucket-readwrite-policy.json";
+      // Запись политики в файл
+      data = await container.exec({
+        Cmd: ["sh", "-c", `echo '${policy}' > ${policy_file_path}`],
+      });
+      await data.start({});
+
+      // Добавление политики в Minio
+      const policy_name = `newbucket-readwrite-policy-${dto.uuid_name}`;
+      data = await container.exec({
+        Cmd: ["mc", "admin", "policy", "create", this.cfg.minio_alias, policy_name, policy_file_path],
+      });
+      await data.start({});
+      // Применение политики к пользователю
+      data = await container.exec({
+        Cmd: [
+          "mc",
+          "admin",
+          "policy",
+          "attach",
+          this.cfg.minio_alias,
+          policy_name,
+          `--user`,
+          `${dto.minio_container.minio_login}`,
+        ],
+      });
+      await data.start({});
+
+      console.log("Пользователь и политика успешно созданы");
+      resultObj.minio = { success: true };
     } catch (e) {
-      console.error("minio", e);
+      resultObj.minio = { success: false };
+      console.error("Ошибка при создании пользователя или политики Minio:", e);
     }
-    // try {
-    //   await this.startVideoContainer(dto);
-    //   resultObj.video = { success: true };
-    // } catch (e) {
-    //   console.error("video", e);
-    //   resultObj.video = { success: false };
-    // }
+    try {
+      await this.startVideoContainer(dto);
+      resultObj.video = { success: true };
+    } catch (e) {
+      console.error("video", e);
+      resultObj.video = { success: false };
+    }
 
     return resultObj;
   }
@@ -121,8 +199,8 @@ export class AppService {
       Env: [
         `S3_LOGIN=${options.minio_container.minio_login}`,
         `S3_PASS=${options.minio_container.minio_password}`,
-        `S3_URL=http://${name}:${this.cfg.minio_port}`,
-        `BUCKET_NAME=${this.cfg.bucket_name}`,
+        `S3_URL=http://${this.cfg.nginx_container_name}:${this.cfg.nginx_port}`,
+        `BUCKET_NAME=${this.cfg.bucket_name}-${options.uuid_name}`,
         `RTSP_LINK=${options.video_container.rtsp_link}`,
       ],
       HostConfig: {

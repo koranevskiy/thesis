@@ -14,6 +14,8 @@ export interface AppConfig {
   videomicroservice_image_name: string;
   bucket_name: string;
   minio_alias: string;
+  nginx_container_name: string;
+  nginx_port: number;
 }
 
 export default registerAs("app", () => ({
@@ -28,5 +30,7 @@ export default registerAs("app", () => ({
   videomicroservice_image_name: "videomicroservice:latest",
   bucket_name: "videos",
   minio_main_container_name: "bntu-thesis-minio-1",
-  minio_alias: "myminio",
+  minio_alias: "myminio1",
+  nginx_container_name: "bntu-thesis-nginx-1",
+  nginx_port: 80,
 }));
