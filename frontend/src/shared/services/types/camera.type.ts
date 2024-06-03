@@ -19,3 +19,25 @@ export interface Camera {
   created_at: string;
   updated_at: string;
 }
+
+export interface CameraContainerInspection {
+  Id: string;
+  Created: string;
+  Path: string;
+  Args: string[];
+  State: CameraContainerState;
+}
+
+export interface CameraContainerState {
+  Status: string;
+  Running: boolean;
+  Paused: boolean;
+  Restarting: boolean;
+  OOMKilled: boolean;
+  Dead: boolean;
+  Pid: number;
+  ExitCode: number;
+  Error: string;
+  StartedAt: string;
+  FinishedAt: string;
+}

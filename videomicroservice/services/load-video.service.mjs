@@ -37,7 +37,10 @@ async function loadVideosToS3() {
       if (isNeedDeleteFile) {
         const filePath = path.resolve(videoDirPath, prevFile);
         await S3.putObjectsFile([{ path: filePath }]);
-        fs.unlinkSync(filePath);
+        try {
+          fs.unlinkSync(filePath);
+        }catch (e) {
+        }
       }
     }
     prevFile = filename;

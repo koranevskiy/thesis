@@ -10,6 +10,7 @@ import { ConfigService } from "@nestjs/config";
 import { AppConfig } from "src/config/app.config";
 import * as path from "node:path";
 import * as Dockerode from "dockerode";
+import { InspectionDto } from "src/dtos/inspection.dto";
 
 const exec = util.promisify(child_process.exec);
 const Docker = new Dockerode({ socketPath: "/var/run/docker.sock" });
@@ -211,27 +212,59 @@ export class AppService {
     return true;
   }
 
-  private getEnvsString(envs: Record<string, string | number>) {
-    const entries = Object.entries(envs);
-    return entries.reduce((prev, [key, value]) => {
-      return prev + ` -e ${key}='${value}'`;
-    }, "");
+  // private getEnvsString(envs: Record<string, string | number>) {
+  //   const entries = Object.entries(envs);
+  //   return entries.reduce((prev, [key, value]) => {
+  //     return prev + ` -e ${key}='${value}'`;
+  //   }, "");
+  // }
+
+  // private getNetworkString() {
+  //   const network = this.cfg.network_name;
+  //   return `--network=${network}`;
+  // }
+  //
+  // private getVolumeString(target: string, destination: string) {
+  //   const volumeRootPath = this.cfg.rootVolumePath;
+  //   const targetPath = path.join(volumeRootPath, target);
+  //   return `-v ${targetPath}:${destination}`;
+  // }
+  //
+  // private getMinioVolumePath(uuid_name: string) {
+  //   const minioVolumeTarget = `${this.cfg.minio_container_prefix}-${uuid_name}`;
+  //   const destination = "/data";
+  //   return this.getVolumeString(minioVolumeTarget, destination);
+  // }
+
+  async inspectVideo(uuid_name: string) {
+    const video_name = `/video-${uuid_name}`;
+    const containers = await Docker.listContainers({ all: true });
+    const container_info = containers.find(({ Names }) => Names.includes(video_name));
+    if (!container_info) return null;
+    const container = await Docker.getContainer(container_info.Id);
+    const { Created, State, Id } = await container.inspect();
+    const dto = new InspectionDto();
+    dto.Id = Id;
+    dto.Created = Created;
+    dto.State = State;
+    return dto;
   }
 
-  private getNetworkString() {
-    const network = this.cfg.network_name;
-    return `--network=${network}`;
+  private async getContainerByName(name: string) {
+    const containers = await Docker.listContainers({ all: true });
+    const container_info = containers.find(({ Names }) => Names.includes(name));
+    return Docker.getContainer(container_info.Id);
   }
 
-  private getVolumeString(target: string, destination: string) {
-    const volumeRootPath = this.cfg.rootVolumePath;
-    const targetPath = path.join(volumeRootPath, target);
-    return `-v ${targetPath}:${destination}`;
+  async startVideo(uuid_name: string) {
+    const container = await this.getContainerByName(`/video-${uuid_name}`);
+    await container.start();
+    return true;
   }
 
-  private getMinioVolumePath(uuid_name: string) {
-    const minioVolumeTarget = `${this.cfg.minio_container_prefix}-${uuid_name}`;
-    const destination = "/data";
-    return this.getVolumeString(minioVolumeTarget, destination);
+  async stopVideo(uuid_name: string) {
+    const container = await this.getContainerByName(`/video-${uuid_name}`);
+    await container.stop();
+    return true;
   }
 }

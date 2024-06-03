@@ -1,6 +1,6 @@
 import { tokenInstance } from "src/shared/services/token-instance.ts";
 import { ApiResponse } from "src/shared/services/types/response.type.ts";
-import { Camera, CameraDto } from "src/shared/services/types/camera.type.ts";
+import { Camera, CameraContainerInspection, CameraDto } from "src/shared/services/types/camera.type.ts";
 
 class CameraService {
   async addCamera(dto: CameraDto) {
@@ -30,6 +30,23 @@ class CameraService {
   }
   async getMinioPage(uuid_name: string) {
     const { data } = await tokenInstance.get(`/:uuid_name/minio`);
+  }
+
+  async inspectVideo(camera_id: number) {
+    const { data } = await tokenInstance.get<ApiResponse<CameraContainerInspection>>(
+      `/cameras/${camera_id}/inspect-video`
+    );
+    return data.data;
+  }
+
+  async startVideo(camera_id: number) {
+    const { data } = await tokenInstance.post<ApiResponse<boolean>>(`/cameras/${camera_id}/start-video`);
+    return data.data;
+  }
+
+  async stopVideo(camera_id: number) {
+    const { data } = await tokenInstance.post<ApiResponse<boolean>>(`/cameras/${camera_id}/stop-video`);
+    return data.data;
   }
 }
 

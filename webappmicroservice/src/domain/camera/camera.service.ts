@@ -104,4 +104,30 @@ export class CameraService {
 
     return data;
   }
+
+  async inspectVideo(camera: Camera) {
+    const config = this.configService.get<AppConfig>("app");
+
+    const { data } = await this.httpService.axiosRef.get(
+      `${config.infrastructureApiLink}/video-container/${camera.uuid_name}/inspect`
+    );
+    return data;
+  }
+
+  async startVideo(camera: Camera) {
+    const config = this.configService.get<AppConfig>("app");
+
+    const { data } = await this.httpService.axiosRef.post(
+      `${config.infrastructureApiLink}/video-container/${camera.uuid_name}/start-video`
+    );
+    return data;
+  }
+  async stopVideo(camera: Camera) {
+    const config = this.configService.get<AppConfig>("app");
+
+    const { data } = await this.httpService.axiosRef.post(
+      `${config.infrastructureApiLink}/video-container/${camera.uuid_name}/stop-video`
+    );
+    return data;
+  }
 }

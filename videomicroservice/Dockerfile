@@ -8,11 +8,13 @@ RUN \
   elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
+RUN apk add -U tzdata
+RUN apk update && apk add && apk add ffmpeg
 
 COPY . .
 ENV NODE_ENV production
 ENV TZ=Europe/Minsk
-RUN apk update && apk add && apk add ffmpeg
+RUN cp /usr/share/zoneinfo/Europe/Minsk /etc/localtime
 
 
 

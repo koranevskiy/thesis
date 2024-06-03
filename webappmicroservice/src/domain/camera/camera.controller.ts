@@ -24,8 +24,9 @@ import { CameraGuard } from "src/domain/camera/guards/camera.guard";
 import { CameraEntity } from "src/domain/camera/decorators/camera.decorator";
 import { Response, Request } from "express";
 import * as proxy from "express-http-proxy";
+import { InspectionDto } from "src/domain/camera/dto/inspection.dto";
 
-@ApiExtraModels(Camera)
+@ApiExtraModels(Camera, InspectionDto)
 @ApiTags("Камеры")
 @Controller("cameras")
 export class CameraController {
@@ -77,5 +78,26 @@ export class CameraController {
         return req.path;
       },
     })(request, response, next);
+  }
+
+  @Get("/:camera_id/inspect-video")
+  @ApiResponseCustom(HttpStatus.OK, InspectionDto)
+  @UseGuards(AuthGuard, CameraGuard)
+  async inspectVideo(@Param("camera_id") camera_id: number, @CameraEntity() camera: Camera) {
+    return this.cameraService.inspectVideo(camera);
+  }
+
+  @Post("/:camera_id/start-video")
+  @ApiResponseCustom(HttpStatus.OK, InspectionDto)
+  @UseGuards(AuthGuard, CameraGuard)
+  async startVideo(@Param("camera_id") camera_id: number, @CameraEntity() camera: Camera) {
+    return this.cameraService.startVideo(camera);
+  }
+
+  @Post("/:camera_id/stop-video")
+  @ApiResponseCustom(HttpStatus.OK, InspectionDto)
+  @UseGuards(AuthGuard, CameraGuard)
+  async stopVideo(@Param("camera_id") camera_id: number, @CameraEntity() camera: Camera) {
+    return this.cameraService.stopVideo(camera);
   }
 }
