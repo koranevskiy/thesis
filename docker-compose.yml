@@ -106,6 +106,17 @@ services:
       - "4000:4000"
     networks:
       - thesis
+  proxyserver:
+    image: proxyservice:latest
+#    build:
+#      context: .
+#      dockerfile: proxyservice/Dockerfile
+    volumes:
+      - ./proxyservice:/app
+    ports:
+      - ":8080"
+    networks:
+      - thesis
 
 networks:
   thesis:

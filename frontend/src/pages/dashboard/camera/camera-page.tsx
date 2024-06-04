@@ -2,12 +2,33 @@ import { useParams } from "react-router-dom";
 import { useFetch } from "src/shared/hooks/use-fetch.ts";
 import { flowResult } from "mobx";
 import RootModel from "src/shared/models/root.model.ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Spinner } from "src/shared/components/spinner/spinner.tsx";
 import { Button, Grid, IconButton, Modal, Paper, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import CameraService from "src/shared/services/camera.service.ts";
 import CloseIcon from "@mui/icons-material/Close";
+import Hls from "hls.js";
+import "./style.css";
+
+const HLSPlayer = ({ src }: { src: string }) => {
+  const videoRef = useRef();
+
+  useEffect(() => {
+    const hls = new Hls({
+      debug: false,
+    });
+    hls.loadSource(src);
+    hls.attachMedia(videoRef.current!);
+    hls.on(Hls.Events.ERROR, console.error);
+    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+      // @ts-ignore
+      videoRef.current.play();
+    });
+  }, [src]);
+
+  return <video ref={videoRef as any} className="video" controls />;
+};
 
 export const CameraPage = () => {
   const cameraModel = RootModel.cameraModel;
@@ -107,7 +128,6 @@ export const CameraPage = () => {
     // console.log('zxc');
     setCanGetMinio(true);
   };
-
   return (
     <>
       <Grid container>
@@ -120,7 +140,13 @@ export const CameraPage = () => {
           <Typography>UUID: {cameraModel.currentCamera.uuid_name}</Typography>
         </Grid>
         <Grid item xs={12} container columnGap={4}>
-          <Grid item xs={7} height={400} sx={{ background: "black" }}></Grid>
+          <Grid item xs={7} height={650} sx={{ background: "black" }}>
+            {videoInspection?.State?.Running && cameraModel.currentCamera?.uuid_name && (
+              <HLSPlayer
+                src={`${import.meta.env.VITE_PROXY_URL}/live-stream/video-${cameraModel.currentCamera.uuid_name}/stream.m3u8`}
+              />
+            )}
+          </Grid>
           <Grid xs={4} item container justifySelf="center" alignContent="center" gap={2}>
             <Button
               variant="outlined"
@@ -239,7 +265,7 @@ export const CameraPage = () => {
           >
             <CloseIcon fontSize="large" color="error" />
           </IconButton>
-          <iframe src={"http://localhost/minio/ui"} width="90%" height="90%" frameBorder={0} />
+          <iframe src={`${import.meta.env.VITE_PROXY_URL}/minio/ui`} width="90%" height="90%" frameBorder={0} />
         </>
       </Modal>
     </>

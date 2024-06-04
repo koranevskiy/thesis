@@ -20,7 +20,7 @@ class FfmpegService {
       .add("-acodec", "copy") // скопировать в выходной файл исходный кодек аудио
       .add("-f", "segment") // указывает формат выходного файла -f
       .add("-reset_timestamps", "1") // сбрасываем timestamp фреймов каждого сегмента
-      .add("-segment_time", "15") // время сегмента в секундах
+      .add("-segment_time", "60") // время сегмента в секундах
       .add("-segment_format", "mp4") // формат выходного файла при сегментации
       .add("-segment_atclocktime", "1") // сегментация выполняется на основе системного времени
       .add("-strftime", "1") // включаем strftime функцию для шаблона имен выходных сегментов
@@ -31,9 +31,9 @@ class FfmpegService {
       // .add("-vcodec", "copy") // скопировать в выходной файл исходный кодек видео (избегаем этапа перекодировки видео)
       // .add("-acodec", "copy") // скопировать в выходной файл исходный кодек аудио
       .add("-f", "hls")
-      .add("-hls_time", "6")
+      .add("-hls_time", "10")
       .add("-hls_flags", "delete_segments")
-      .add("-hls_list_size", "5")
+      .add("-hls_list_size", "10")
       // .add("-hls_wrap", "10")
       .add("public/stream.m3u8")
     this.ffmpeg = ffmpeg;

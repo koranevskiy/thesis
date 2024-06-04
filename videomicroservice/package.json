@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1613.0",
+    "cors": "^2.8.5",
     "cron": "^3.1.7",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
