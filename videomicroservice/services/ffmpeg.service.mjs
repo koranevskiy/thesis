@@ -35,7 +35,7 @@ class FfmpegService {
       .add("-hls_flags", "delete_segments")
       .add("-hls_list_size", "10")
       // .add("-hls_wrap", "10")
-      .add("public/stream.m3u8")
+      .add("public/stream.m3u8");
     this.ffmpeg = ffmpeg;
   }
 

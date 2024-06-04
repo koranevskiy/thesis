@@ -108,9 +108,9 @@ services:
       - thesis
   proxyserver:
     image: proxyservice:latest
-#    build:
-#      context: .
-#      dockerfile: proxyservice/Dockerfile
+    #    build:
+    #      context: .
+    #      dockerfile: proxyservice/Dockerfile
     volumes:
       - ./proxyservice:/app
     ports:
