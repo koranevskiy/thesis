@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { SpawnProcessBuilder } from "#utils/process.util.mjs";
 import Config from "#config/index.mjs";
+
 /**
  * @class Singleton class содержащий методы для работы с ffmpeg
  */
@@ -26,7 +27,15 @@ class FfmpegService {
       .add("-pix_fmt", "yuv420p") // указываем цветовое простарнство (формат пикселей)
       .add("./video-stream/%Y-%m-%d-T-%H-%M-%S.mp4", "") // сохраняем сегменты по пути с именем шаблона
       //.add('-vf', 'select=not(mod(n\\,5))','-vsync', 'vfr','-q:v', '2', 'frame-for-send/output%d.jpeg') // закоменчено т.к. vsync deprecated
-      .add("-vf", "select=not(mod(n\\,5))", "-fps_mode", "vfr", "-q:v", "2", "frame-for-send/output%d.jpeg"); // фильтр для записи каждого n кадра в frame-for-send
+      .add("-vf", "select=not(mod(n\\,5))", "-fps_mode", "vfr", "-q:v", "2", "frame-for-send/output%d.jpeg") // фильтр для записи каждого n кадра в frame-for-send
+      // .add("-vcodec", "copy") // скопировать в выходной файл исходный кодек видео (избегаем этапа перекодировки видео)
+      // .add("-acodec", "copy") // скопировать в выходной файл исходный кодек аудио
+      .add("-f", "hls")
+      .add("-hls_time", "6")
+      .add("-hls_flags", "delete_segments")
+      .add("-hls_list_size", "5")
+      // .add("-hls_wrap", "10")
+      .add("public/stream.m3u8")
     this.ffmpeg = ffmpeg;
   }
 
