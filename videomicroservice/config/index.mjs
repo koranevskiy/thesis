@@ -18,8 +18,8 @@ class Config {
       loadCronTime: process.env.VIDEO_UPLOAD_CRON_TIME,
     };
     this.rtspLink = process.env.RTSP_LINK;
-    this.proxyUrl = process.env.PROXY_URL
-    this.cameraUuid = process.env.CAMERA_UUID
+    this.proxyUrl = process.env.PROXY_URL;
+    this.cameraUuid = process.env.CAMERA_UUID;
   }
 }
 

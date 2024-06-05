@@ -4,7 +4,7 @@ import Config from "#config/index.mjs";
 import { dirname, isFileWritingNow } from "#utils/file-system.util.mjs";
 import S3 from "#utils/s3.util.mjs";
 // import cron from "node-cron";
-import axios from 'axios'
+import axios from "axios";
 
 await S3.initS3(Config.s3);
 
@@ -15,7 +15,7 @@ async function loadVideosToS3() {
     .readdirSync(videoDirPath, { withFileTypes: true })
     .filter(file => !file.name.startsWith("."))
     .map(file => ({
-      path: path.resolve(videoDirPath, file.name)
+      path: path.resolve(videoDirPath, file.name),
     }))
     .filter(file => !isFileWritingNow(file.path));
   if (dirFilesPath.length) {
@@ -40,8 +40,7 @@ async function loadVideosToS3() {
         await S3.putObjectsFile([{ path: filePath }]);
         try {
           fs.unlinkSync(filePath);
-        } catch (e) {
-        }
+        } catch (e) {}
       }
     }
     prevFile = filename;
@@ -49,7 +48,6 @@ async function loadVideosToS3() {
 }
 
 loadVideosToS3();
-
 
 let cronInstance = null;
 
@@ -63,33 +61,32 @@ async function processFrames() {
       .readdirSync(framesDir, { withFileTypes: true })
       .filter(file => !file.name.startsWith("."))
       .map(file => ({
-        path: path.resolve(framesDir, file.name)
+        path: path.resolve(framesDir, file.name),
       }))
       .filter(file => !isFileWritingNow(file.path));
 
-    for (const {path: filePath} of dirFilesPath) {
-      const base64Image = fs.readFileSync(filePath).toString('base64')
+    for (const { path: filePath } of dirFilesPath) {
+      const base64Image = fs.readFileSync(filePath).toString("base64");
 
       const { data } = await axios.post(`${Config.proxyUrl}/detect`, {
         uuid: Config.cameraUuid,
-        image: base64Image
-      })
+        image: base64Image,
+      });
       await axios.post(`${Config.proxyUrl}/webmain/detectors/event`, {
         camera_uuid: Config.cameraUuid,
         annotated_image: data.annotated_image,
         original_image: base64Image,
         detections: data.detections,
-        event_text: data.event_text
-      })
-      fs.unlinkSync(filePath)
+        event_text: data.event_text,
+      });
+      fs.unlinkSync(filePath);
     }
   } catch (e) {
     console.log(e);
   } finally {
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    processFrames()
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    processFrames();
   }
-
 }
 
 processFrames();
