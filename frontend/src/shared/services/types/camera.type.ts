@@ -41,3 +41,22 @@ export interface CameraContainerState {
   StartedAt: string;
   FinishedAt: string;
 }
+
+export interface Detection {
+  created_at: string;
+  update_at: string;
+  detection_id: number;
+  event_text: string;
+  detection_json_link: string;
+  original_image_link: string;
+  annotated_image_link: string;
+  camera_id: string;
+  // получаем из s3
+  detections: DetectionObject[];
+}
+
+export interface DetectionObject {
+  confidence: number;
+  id: number;
+  label: string;
+}

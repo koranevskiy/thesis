@@ -4,6 +4,7 @@ import { S3Config } from "#config/s3.config";
 import * as AWS from "aws-sdk";
 import * as moment from "moment";
 import * as crypto from "node:crypto";
+import { PutObjectRequest } from "aws-sdk/clients/s3";
 @Injectable()
 export class S3Service {
   private readonly s3: AWS.S3;
@@ -41,7 +42,10 @@ export class S3Service {
     return folderName;
   }
 
-  async putObjectsFile(objects: { path: string }[] | Buffer[]): Promise<string[]> {
+  async putObjectsFile(
+    objects: { path: string }[] | Buffer[],
+    options: { imageBase64?: boolean } = {}
+  ): Promise<string[]> {
     const folderName = this.getFolderName();
     const bucketName = this.bucketName;
     let bufferObjects;
@@ -68,12 +72,16 @@ export class S3Service {
 
     const uploadPromeses = bufferObjects.map(object => {
       const objectKey = this.getObjectKey(folderName);
-      const objectPayload = {
+      const objectPayload: PutObjectRequest = {
         Key: objectKey,
         Body: object.buffer,
         Bucket: bucketName,
         ACL: "public-read",
       };
+      if (options.imageBase64) {
+        objectPayload.ContentEncoding = "base64";
+        objectPayload.ContentType = "image/jpeg";
+      }
       return this.s3
         .putObject(objectPayload)
         .promise()

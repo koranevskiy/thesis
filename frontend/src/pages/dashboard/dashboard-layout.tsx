@@ -1,31 +1,16 @@
 import { observer } from "mobx-react-lite";
 import { FC, PropsWithChildren, useState, MouseEvent } from "react";
 import { useTheme } from "@mui/material/styles";
-import {
-  Box,
-  IconButton,
-  Toolbar,
-  Typography,
-  Drawer,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Box, IconButton, Toolbar, Typography, Drawer, Divider, Menu, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import MailIcon from "@mui/icons-material/Mail";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { Avatar } from "src/shared/components/avatar/avatar.tsx";
 import { useFetch } from "src/shared/hooks/use-fetch.ts";
 import { flowResult } from "mobx";
 import RootModel from "src/shared/models/root.model.ts";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { AppBar, DrawerHeader, Main, drawerWidth } from "./ui/drawer-blocks";
 import { DrawerLinks } from "src/pages/dashboard/ui/drawer-links.tsx";
 
@@ -35,6 +20,8 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
   const [open, setOpen] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const navigate = useNavigate();
 
   const { isLoading, execute: logout } = useFetch({
     requestCb: async () => flowResult(RootModel.authModel.logout()),
@@ -97,7 +84,10 @@ export const DashboardLayout: FC<PropsWithChildren> = observer(({ children }) =>
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
+        <DrawerHeader sx={{ justifyContent: "space-between" }}>
+          <IconButton color="inherit" aria-label="open drawer" onClick={() => navigate(-1)} edge="start">
+            <KeyboardDoubleArrowLeftIcon />
+          </IconButton>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>

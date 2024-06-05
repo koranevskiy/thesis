@@ -1,4 +1,4 @@
-import pyperclip
+# import pyperclip
 import base64
 import io
 import uuid
@@ -68,7 +68,7 @@ def process_image():
     buffered = io.BytesIO()
     annotated_image.save(buffered, format="JPEG")
     annotated_image_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
-    pyperclip.copy('data:image/jpeg;base64,' + annotated_image_base64)
+    # pyperclip.copy('data:image/jpeg;base64,' + annotated_image_base64)
     for detection in detections:
         detection.pop('box', None)
     response = {

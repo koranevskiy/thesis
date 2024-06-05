@@ -27,7 +27,7 @@ class FfmpegService {
       .add("-pix_fmt", "yuv420p") // указываем цветовое простарнство (формат пикселей)
       .add("./video-stream/%Y-%m-%d-T-%H-%M-%S.mp4", "") // сохраняем сегменты по пути с именем шаблона
       //.add('-vf', 'select=not(mod(n\\,5))','-vsync', 'vfr','-q:v', '2', 'frame-for-send/output%d.jpeg') // закоменчено т.к. vsync deprecated
-      .add("-vf", "select=not(mod(n\\,5))", "-fps_mode", "vfr", "-q:v", "2", "frame-for-send/output%d.jpeg") // фильтр для записи каждого n кадра в frame-for-send
+      .add("-vf", "select=not(mod(n\\,60))", "-fps_mode", "vfr", "-q:v", "2", "frame-for-send/output%d.jpeg") // фильтр для записи каждого n кадра в frame-for-send
       // .add("-vcodec", "copy") // скопировать в выходной файл исходный кодек видео (избегаем этапа перекодировки видео)
       // .add("-acodec", "copy") // скопировать в выходной файл исходный кодек аудио
       .add("-f", "hls")

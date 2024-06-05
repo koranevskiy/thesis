@@ -68,6 +68,24 @@ export class CameraService {
     return data;
   }
 
+  async findCameraBuUuid(uuid_name: string) {
+    const camera = await Camera.findOne({
+      where: {
+        uuid_name,
+      },
+    });
+
+    if (!camera) {
+      throw new DomainException({
+        code: HttpStatus.NOT_FOUND,
+        message: `Камера по uuid = ${uuid_name} не найдена`,
+      });
+    }
+
+    camera.config = await this.getCameraConfig(camera.file_config_link);
+    return camera;
+  }
+
   async findCameraById(user_id: number, camera_id: number) {
     const camera = await Camera.findOne({
       where: {

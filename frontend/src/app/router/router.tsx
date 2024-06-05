@@ -11,6 +11,7 @@ import { DashboardLayout } from "src/pages/dashboard/dashboard-layout.tsx";
 import { AddCameraPage } from "src/pages/dashboard/add-camera/add-camera-page.tsx";
 import { CameraManagerPage } from "src/pages/dashboard/camera-manager/camera-manager-page.tsx";
 import { CameraPage } from "src/pages/dashboard/camera/camera-page.tsx";
+import { DetectorPage } from "src/pages/dashboard/detector/detector-page.tsx";
 
 export const AppRouter = () => {
   return (
@@ -46,6 +47,7 @@ export const AppRouter = () => {
           <Route path={AppRoutesEnum.DashboardCreateCamera} element={<AddCameraPage />} />
           <Route path={AppRoutesEnum.DashboardCameraManager} element={<CameraManagerPage />} />
           <Route path={`${AppRoutesEnum.DashboardCamera}/:camera_id`} element={<CameraPage />} />
+          <Route path={`${AppRoutesEnum.DashboardDetector}/:camera_id`} element={<DetectorPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -7,9 +7,12 @@ import { GlobalExceptionFilter } from "#system/filters/global-exception.filter";
 import { CustomLogger } from "#system/logger/logger";
 import { ValidationGlobalPipe } from "#system/pipes/validation-global.pipe";
 import { ResponseInterceptor } from "#system/interceptors/response.interceptor";
+import * as bodyParser from "body-parser";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(bodyParser.json({ limit: "50mb" }));
+  app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
   const configService = app.get(ConfigService);
   const appCfg = configService.get<AppConfig>("app");
 

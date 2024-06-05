@@ -25,6 +25,9 @@ const HLSPlayer = ({ src }: { src: string }) => {
       // @ts-ignore
       videoRef.current.play();
     });
+    return () => {
+      hls.destroy();
+    };
   }, [src]);
 
   return <video ref={videoRef as any} className="video" controls />;

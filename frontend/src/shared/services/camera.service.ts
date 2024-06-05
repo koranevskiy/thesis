@@ -1,6 +1,6 @@
 import { tokenInstance } from "src/shared/services/token-instance.ts";
 import { ApiResponse } from "src/shared/services/types/response.type.ts";
-import { Camera, CameraContainerInspection, CameraDto } from "src/shared/services/types/camera.type.ts";
+import { Camera, CameraContainerInspection, CameraDto, Detection } from "src/shared/services/types/camera.type.ts";
 
 class CameraService {
   async addCamera(dto: CameraDto) {
@@ -46,6 +46,11 @@ class CameraService {
 
   async stopVideo(camera_id: number) {
     const { data } = await tokenInstance.post<ApiResponse<boolean>>(`/cameras/${camera_id}/stop-video`);
+    return data.data;
+  }
+
+  async getDetections(camera_id: number) {
+    const { data } = await tokenInstance.get<ApiResponse<Detection>>(`/detectors/${camera_id}`);
     return data.data;
   }
 }

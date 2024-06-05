@@ -203,6 +203,8 @@ export class AppService {
         `S3_URL=http://${this.cfg.nginx_container_name}:${this.cfg.nginx_port}`,
         `BUCKET_NAME=${this.cfg.bucket_name}-${options.uuid_name}`,
         `RTSP_LINK=${options.video_container.rtsp_link}`,
+        `PROXY_URL=http://${this.cfg.nginx_container_name}`,
+        `CAMERA_UUID=${options.uuid_name}`,
       ],
       HostConfig: {
         NetworkMode: this.cfg.network_name,

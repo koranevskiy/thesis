@@ -10,6 +10,7 @@ import { AuthModule } from "src/domain/auth/auth.module";
 import { CameraModule } from "src/domain/camera/camera.module";
 import { S3Config, s3Config } from "#config/s3.config";
 import { S3Module } from "#system/s3/s3.module";
+import { DetectorModule } from "src/domain/detector/detector.module";
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { S3Module } from "#system/s3/s3.module";
     AuthJwtModule,
     AuthModule,
     CameraModule,
+    DetectorModule,
   ],
   providers: [CustomLogger],
 })

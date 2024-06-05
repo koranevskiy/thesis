@@ -48,10 +48,11 @@ export const CameraManagerPage = observer(() => {
                 }}
                 onClick={() => navigate(AppRoutesEnum.DashboardCameraManager + "/" + camera.camera_id)}
               >
-                <Grid item xs={12}>
+                <Grid item xs={12} display="flex" flexDirection="row" alignItems="center" gap={2}>
                   <Typography fontWeight={700} fontSize={30}>
-                    {camera.camera_name} <PhotoCameraIcon fontSize="large" />
+                    {camera.camera_name}
                   </Typography>
+                  <PhotoCameraIcon fontSize="large" />
                 </Grid>
                 <Grid item xs={12}>
                   <Typography>
